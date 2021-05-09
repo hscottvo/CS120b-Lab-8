@@ -26,7 +26,7 @@ void set_PWM(double frequency) {
         else {OCR3A = (short)(8000000 / (128 * frequency)) - 1;}
 
         TCNT3 = 0;
-        current_frequency = frequency
+        current_frequency = frequency;
     }
 }
 
