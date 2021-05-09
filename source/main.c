@@ -47,7 +47,7 @@ void PWM_off() {
 int main(void) {
     /* Insert DDR and PORT initializations */
     DDRA = 0x00; PORTA = 0xFF;
-    DDRB = 0xFF; PORTB = 0x00;
+    DDRB = 0x40; PORTB = 0x00;
     unsigned char tempA = 0x00;
     /* Insert your solution below */
     while (1) {
