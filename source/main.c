@@ -51,7 +51,7 @@ int main(void) {
     unsigned char tempA = 0x00;
     /* Insert your solution below */
     while (1) {
-        tempA = (!PINA) & 0x07;
+        tempA = (~PINA) & 0x07;
 
         if (tempA == 0x01) {
             PWM_on();
