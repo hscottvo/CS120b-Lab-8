@@ -145,10 +145,12 @@ void tone_tick(){
             if (tempA == 0x01) {
                 tone_state = tone_play;
                 set_PWM(c_scale[current_degree]);
+                play_flag = true;
             }
             else {
                 tone_state = tone_wait;                
-                set_PWM(0);                
+                set_PWM(0);   
+                play_flag = false;             
             }
             break;
         case tone_play: 
