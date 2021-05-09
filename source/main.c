@@ -103,11 +103,17 @@ void pitch_tick() {
             } 
             else if (tempA == 0x02) {
                 pitch_state = pitch_up;
-                current_degree = (current_degree >= 7)? current_degree: current_degree + 1;
+                // current_degree = (current_degree >= 7)? current_degree: current_degree + 1;
+                if (current_degree < 7){
+                    ++current_degree;
+                }
             }
             else if (tempA == 0x04) {
                 pitch_state = pitch_down;
-                current_degree = (current_degree <= 0)? current_degree: current_degree - 1;
+                // current_degree = (current_degree <= 0)? current_degree: current_degree - 1;
+                if (current_degree > 0) {
+                    --current_degree;
+                }
             }
             else {
                 pitch_state = pitch_wait;
