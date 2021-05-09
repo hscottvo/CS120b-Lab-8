@@ -47,44 +47,112 @@ enum note_states {note_silent, note_c, note_d, note_e} note_state;
 
 unsigned char tempA = 0x00;
 
-void tone_tick() {
+// void tone_tick() {
+//     tempA = (~PINA) & 0x07;
+//     switch(note_state) {
+//         case note_silent:
+//             set_PWM(0);
+//             if (tempA == 0x01) {
+//                 note_state = note_c;
+//             } 
+//             else if (tempA == 0x02) {
+//                 note_state = note_d;
+//             }
+//             else if (tempA == 0x04) {
+//                 note_state = note_e;
+//             } 
+//             else {
+//                 note_state = note_silent;
+//             }
+//             break;
+//         case note_c:
+//             set_PWM(261.63);
+//             if (tempA != 0x01) {
+//                 note_state = note_silent;
+//             }
+//             else note_state = note_c;
+//             break;
+//         case note_d:
+//             set_PWM(293.66);
+//             if (tempA != 0x02) {
+//                 note_state = note_silent;
+//             }
+//             else note_state = note_d;
+//             break;
+//         case note_e:
+//             set_PWM(329.63);
+//             if (tempA != 0x04) {
+//                 note_state = note_silent;
+//             }
+//             else note_state = note_e;
+//     }
+// }
+
+enum pitch_states {pitch_wait, pitch_up, pitch_down, pitch_play, pitch_play_wait, pitch_play_wait_2} pitch_state;
+double[] c_scale = {261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493,88, 523.25};
+unsigned char current_degree = 0x00;
+
+void pitch_tick() {
     tempA = (~PINA) & 0x07;
-    switch(note_state) {
-        case note_silent:
+    switch(pitch_state){
+        case pitch_wait: 
             set_PWM(0);
-            if (tempA == 0x01) {
-                note_state = note_c;
+            if (tempA == 0x01){
+                pitch_state = pitch_play;
+                set_PWM(c_scale[current_degree]);
             } 
             else if (tempA == 0x02) {
-                note_state = note_d;
+                pitch_state = pitch_up;
+                current_degree = (current_degree >= 8)? current_degree: current_degree + 1;
             }
             else if (tempA == 0x04) {
-                note_state = note_e;
+                pitch_state = pitch_down;
+                current_degree = (current_degree <= 0)? current_degree: current_degree - 1;
+            }
+            else {
+                pitch_state = pitch_wait;
+            }
+            break;
+        case pitch_up 
+            if (tempA == 0x02) {
+                pitch_state = pitch_up;
             } 
             else {
-                note_state = note_silent;
+                pitch_state = pitch_wait;
             }
             break;
-        case note_c:
-            set_PWM(261.63);
-            if (tempA != 0x01) {
-                note_state = note_silent;
+        case pitch_down:
+            if (tempA == 0x04) {
+                pitch_state = pitch_down;
             }
-            else note_state = note_c;
+            else {
+                pitch_state = pitch_wait;
+            }
+            break;        
+        case pitch_play:
+            if (tempA == 0x00) {
+                pitch_state = pitch_play_wait;
+            } 
+            else {
+                pitch_state = pitch_play;
+            }
             break;
-        case note_d:
-            set_PWM(293.66);
-            if (tempA != 0x02) {
-                note_state = note_silent;
+        case pitch_play_wait: 
+            if (tempA == 0x01) {
+                pitch_state = pitch_play_wait_2;
+            } 
+            else {
+                pitch_state = pitch_play_wait;
             }
-            else note_state = note_d;
             break;
-        case note_e:
-            set_PWM(329.63);
-            if (tempA != 0x04) {
-                note_state = note_silent;
+        case pitch_play_wait_2:
+            if (tempA == 0x00) {
+                pitch_state = pitch_wait;
+            } 
+            else {
+                pitch_state = pitch_play_wait_2;
             }
-            else note_state = note_e;
+
     }
 }
 
