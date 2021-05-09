@@ -43,31 +43,60 @@ void PWM_off() {
     TCCR3B = 0x00;
 }
 
+enum note_states {note_silent, note_c, note_d, note_e} note_state;
+
+unsigned char tempA = 0x00;
+
+void tone_tick() {
+    tempA = (~PINA) & 0x07;
+    switch(note_state) {
+        case note_silent:
+            set_PWM(0);
+            if (tempA == 0x01) {
+                note_state = note_c;
+            } 
+            else if (tempA == 0x02) {
+                note_state = note_d;
+            }
+            else if (tempA == 0x04) {
+                note_state = note_e;
+            } 
+            else {
+                note_state = note_silent;
+            }
+            break;
+        case note_c:
+            set_PWM(261.63);
+            if (tempA != 0x01) {
+                note_state = note_silent;
+            }
+            else note_state = note_c;
+            break;
+        case note_d:
+            set_PWM(293.66);
+            if (tempA != 0x02) {
+                note_state = note_silent;
+            }
+            else note_state = note_d;
+            break;
+        case note_e:
+            set_PWM(329.63);
+            if (tempA != 0x04) {
+                note_state = note_silent;
+            }
+            else note_state = note_e;
+    }
+}
 
 int main(void) {
     /* Insert DDR and PORT initializations */
     DDRA = 0x00; PORTA = 0xFF;
-    DDRB = 0x40; PORTB = 0x00;
-    unsigned char tempA = 0x00;
+    DDRB = 0xFF; PORTB = 0x00;
+    PWM_on();
     /* Insert your solution below */
+    note_state = note_silent;
     while (1) {
-        tempA = (~PINA) & 0x07;
-
-        if (tempA == 0x01) {
-            PWM_on();
-            set_PWM(261.63);
-        } 
-        else if (tempA = 0x02) {
-            PWM_on();
-            set_PWM(293.66);
-        }
-        else if (tempA = 0x04) {
-            PWM_on();
-            set_PWM(329.63);
-        } 
-        else {
-            PWM_off();
-        }
+        tone_tick();
     }
     return 1;
 }
