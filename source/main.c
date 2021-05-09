@@ -141,7 +141,7 @@ void tone_tick(){
         case tone_wait: 
             if (tempA == 0x01) {
                 tone_state = tone_play;
-                set_PWM(c_scale[current_degree])
+                set_PWM(c_scale[current_degree]);
             }
             else {
                 tone_state = tone_wait;                
