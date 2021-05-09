@@ -162,9 +162,9 @@ int main(void) {
     DDRB = 0xFF; PORTB = 0x00;
     PWM_on();
     /* Insert your solution below */
-    note_state = note_silent;
+    pitch_state = pitch_wait;
     while (1) {
-        tone_tick();
+        pitch_tick();
     }
     return 1;
 }
