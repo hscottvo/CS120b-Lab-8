@@ -113,7 +113,7 @@ void pitch_tick() {
                 pitch_state = pitch_wait;
             }
             break;
-        case pitch_up 
+        case pitch_up:
             if (tempA == 0x02) {
                 pitch_state = pitch_up;
             } 
