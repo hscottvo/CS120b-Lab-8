@@ -96,7 +96,7 @@ void pitch_tick() {
     tempA = (~PINA) & 0x07;
     switch(pitch_state){
         case pitch_wait: 
-            set_PWM(0);
+            
             if (tempA == 0x01){
                 pitch_state = pitch_play;
                 set_PWM(c_scale[current_degree]);
@@ -116,6 +116,7 @@ void pitch_tick() {
                 }
             }
             else {
+                set_PWM(0);
                 pitch_state = pitch_wait;
             }
             break;
