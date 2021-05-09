@@ -88,7 +88,7 @@ unsigned char tempA = 0x00;
 //     }
 // }
 
-enum pitch_states {pitch_wait, pitch_up, pitch_down, pitch_play, pitch_play_wait, pitch_play_wait_2} pitch_state;
+enum pitch_states {pitch_wait, pitch_up, pitch_down} pitch_state;
 double c_scale[8] = {261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25};
 unsigned char current_degree = 0x00;
 
@@ -96,12 +96,7 @@ void pitch_tick() {
     tempA = (~PINA) & 0x07;
     switch(pitch_state){
         case pitch_wait: 
-            
-            if (tempA == 0x01){
-                pitch_state = pitch_play;
-                set_PWM(c_scale[current_degree]);
-            } 
-            else if (tempA == 0x02) {
+            if (tempA == 0x02) {
                 pitch_state = pitch_up;
                 // current_degree = (current_degree >= 7)? current_degree: current_degree + 1;
                 if (current_degree < 7){
@@ -116,7 +111,6 @@ void pitch_tick() {
                 }
             }
             else {
-                set_PWM(0);
                 pitch_state = pitch_wait;
             }
             break;
@@ -136,30 +130,39 @@ void pitch_tick() {
                 pitch_state = pitch_wait;
             }
             break;        
-        case pitch_play:
-            if (tempA == 0x00) {
-                pitch_state = pitch_play_wait;
-            } 
-            else {
-                pitch_state = pitch_play;
-            }
-            break;
-        case pitch_play_wait: 
-            if (tempA == 0x01) {
-                pitch_state = pitch_play_wait_2;
-            } 
-            else {
-                pitch_state = pitch_play_wait;
-            }
-            break;
-        case pitch_play_wait_2:
-            if (tempA == 0x00) {
-                pitch_state = pitch_wait;
-            } 
-            else {
-                pitch_state = pitch_play_wait_2;
-            }
+    }
+}
 
+enum tone_states {tone_wait, tone_play, tone_play_wait, tone_play_wait_2} tone_state;
+
+void tone_tick(){
+    tempA = (~PINA) & 0x07;
+    switch(tone_state){
+        case tone_wait: 
+            if (tempA == 0x01) {
+                tone_state = tone_play;
+                set_PWM(c_scale[current_degree])
+            }
+            else {
+                tone_state = tone_wait;                
+                set_PWM(0);                
+            }
+            break;
+        case tone_play: 
+            if (tempA == 0x00) {
+                tone_state = tone_play_wait;
+            } else tone_state = tone_play;
+            break;
+        case tone_play_wait: 
+            if (tempA == 0x01) {
+                tone_state = tone_playwait_2;
+            } else tone_state = tone_play_wait;
+            break;
+        case tone_play_wait_2:
+            if (tempA == 0x00) {
+                tone_state = tone_wait;
+            } else tone_state = tone_play_wait_2;
+            break;
     }
 }
 
@@ -172,6 +175,7 @@ int main(void) {
     pitch_state = pitch_wait;
     while (1) {
         pitch_tick();
+        tone_tick();
     }
     return 1;
 }
