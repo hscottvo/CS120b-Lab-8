@@ -89,7 +89,7 @@ unsigned char tempA = 0x00;
 // }
 
 enum pitch_states {pitch_wait, pitch_up, pitch_down, pitch_play, pitch_play_wait, pitch_play_wait_2} pitch_state;
-double[] c_scale = {261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493,88, 523.25};
+double c_scale[8] = {261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493,88, 523.25};
 unsigned char current_degree = 0x00;
 
 void pitch_tick() {
