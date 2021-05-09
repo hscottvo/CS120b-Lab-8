@@ -91,6 +91,7 @@ unsigned char tempA = 0x00;
 enum pitch_states {pitch_wait, pitch_up, pitch_down} pitch_state;
 double c_scale[8] = {261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25};
 unsigned char current_degree = 0x00;
+bool play_flag = true;
 
 void pitch_tick() {
     tempA = (~PINA) & 0x07;
@@ -102,6 +103,7 @@ void pitch_tick() {
                 if (current_degree < 7){
                     ++current_degree;
                 }
+                if (play_flag) set_PWM(c_scale[current_degree]);
             }
             else if (tempA == 0x04) {
                 pitch_state = pitch_down;
@@ -109,6 +111,7 @@ void pitch_tick() {
                 if (current_degree > 0) {
                     --current_degree;
                 }
+                if (play_flag) set_PWM(c_scale[current_degree]);
             }
             else {
                 pitch_state = pitch_wait;
