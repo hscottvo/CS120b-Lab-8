@@ -155,7 +155,7 @@ void tone_tick(){
             break;
         case tone_play_wait: 
             if (tempA == 0x01) {
-                tone_state = tone_playwait_2;
+                tone_state = tone_play_wait_2;
             } else tone_state = tone_play_wait;
             break;
         case tone_play_wait_2:
