@@ -85,7 +85,7 @@ void PWM_off() {
 }
 
 double c_scale[10] = {261.63, 277.18, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25, 0};
-unsigned char sequence[24] = {9, 9, 9, 9, 9, 9, 9, 1, 2, 4, 6, 8, 7, 5, 2, 4, 3, 5, 7, 8, 8, 9, 9, 9};
+unsigned char sequence[20] = {9, 9, 9, 1, 2, 4, 6, 8, 7, 5, 2, 4, 3, 5, 7, 8, 8, 9, 9, 9};
 /*
 C:0
 C#:1
@@ -113,14 +113,13 @@ void mel_tick() {
             break;
         case mel_play:
             set_PWM(c_scale[sequence[current_degree]]);
-            if((current_degree < 23) && (play_flag & 0x01) == 0x01) {
+            if((current_degree < 19) && (play_flag & 0x01) == 0x01) {
                 current_degree++;
                 mel_state = mel_play;
             }
             else {
                 mel_state = mel_wait;
                 play_flag = 0x00;
-                current_degree = 0x00;
             }
     }
 
