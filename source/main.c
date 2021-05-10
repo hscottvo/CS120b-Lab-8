@@ -44,7 +44,7 @@ void PWM_off() {
 }
 
 double c_scale[10] = {261.63, 277.18, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25, 0};
-unsigned char sequence[16] = {9, 9, 9, 9, 9, 9, 9, 1, 2, 4, 6, 8, 7, 5, 2, 4, 3, 5, 7, 8, 8, 9, 9, 9};
+unsigned char sequence[24] = {9, 9, 9, 9, 9, 9, 9, 1, 2, 4, 6, 8, 7, 5, 2, 4, 3, 5, 7, 8, 8, 9, 9, 9};
 /*
 C:0
 C#:1
@@ -71,8 +71,8 @@ void mel_tick() {
             else mel_state = mel_play;
             break;
         case mel_play:
-            set_PWM(c_scale[sequence[current_degree]])
-            if((current_degree < 15) && (mel_flag & 0x01) == 0x01;) {
+            set_PWM(c_scale[sequence[current_degree]]);
+            if((current_degree < 23) && (mel_flag & 0x01) == 0x01;) {
                 current_degree++;
                 mel_state = mel_play
             }
@@ -88,7 +88,7 @@ enum play_states {play_wait, play_press} play_state;
 
 void play_tick() {
     tempA = (~PINA) & 0x01;
-    switch(play_states){
+    switch(play_state){
         case play_wait:
             if(tempA == 0x01 && play_flag == 0x00) {
                 play_state = play_press;
@@ -114,6 +114,8 @@ int main(void) {
     PWM_on();
     /* Insert your solution below */
     while (1) {
+        mel_tick();
+        play_tick;
     }
     return 1;
 }
