@@ -72,7 +72,7 @@ void mel_tick() {
             break;
         case mel_play:
             set_PWM(c_scale[sequence[current_degree]]);
-            if((current_degree < 23) && (play_flag & 0x01) == 0x01;) {
+            if((current_degree < 23) && (play_flag & 0x01) == 0x01) {
                 current_degree++;
                 mel_state = mel_play;
             }
