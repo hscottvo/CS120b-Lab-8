@@ -120,6 +120,7 @@ void mel_tick() {
             else {
                 mel_state = mel_wait;
                 play_flag = 0x00;
+                current_degree = 0x00;
             }
     }
 
